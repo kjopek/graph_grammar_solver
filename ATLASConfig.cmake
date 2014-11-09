@@ -10,6 +10,9 @@ SET(ATLAS_POSSIBLE_INCLUDE_PATHS
   /usr/include
   /usr/include/atlas
   /usr/local/include
+  /usr/local/include/atlas
+  /usr/local/include/atlas/shared
+  /usr/local/include/atlas/static
   $ENV{ATLAS_DIR}
   $ENV{ATLAS_DIR}/include
 )
