@@ -6,6 +6,7 @@ find_package(ATLAS REQUIRED)
 
 include_directories(${ATLAS_INCLUDE_DIR})
 link_directories(/usr/local/lib/)
+link_directories(/opt/local/lib/) # For Atlas installed via OS X MacPorts 
 
 add_library(SolverLib SHARED EquationSystem.cpp Analysis.cpp Node.cpp Mesh.cpp)
 target_link_libraries(SolverLib -lcblas -llapack -latlas)
