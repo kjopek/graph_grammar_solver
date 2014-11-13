@@ -130,14 +130,14 @@ bool Mesh::saveToFile(const char *filename)
     fprintf(fp, "%lu\n", this->getElements().size());
 
     for (Element *e : this->getElements()) {
-        fprintf(fp, "%lu %lu %lu %lu %lu %lu\n", e->k, e->l, e->x1, e->y1, e->x2, e->y2);
+        fprintf(fp, "%llu %llu %llu %llu %llu %llu\n", e->k, e->l, e->x1, e->y1, e->x2, e->y2);
     }
 
     fprintf(fp, "\n%lu\n", this->nodes.size());
     for (Node *n : this->nodes) {
         fprintf(fp, "%u %lu ", n->getId(), n->getElements().size());
         for (Element *e : n->getElements()) {
-            fprintf(fp, "%lu %lu ", e->k, e->l);
+            fprintf(fp, "%llu %llu ", e->k, e->l);
         }
         if (n->getElements().size() > 1) {
             fprintf(fp, "%u %u ", n->getLeft()->getId(), n->getRight()->getId());
@@ -162,8 +162,8 @@ Mesh *Mesh::loadFromFile(const char *filename, MeshSource src)
     uint64_t elements = 0;
     uint64_t nodes = 0;
 
-    fscanf(fp, "%lu", &p);
-    fscanf(fp, "%lu", &elements);
+    fscanf(fp, "%llu", &p);
+    fscanf(fp, "%llu", &elements);
 
     mesh = new Mesh(p, 2);
 
@@ -173,7 +173,7 @@ Mesh *Mesh::loadFromFile(const char *filename, MeshSource src)
     for (uint64_t i=0; i<elements; ++i) {
         uint64_t k, l;
         uint64_t x1, y1, x2, y2;
-        fscanf(fp, "%lu %lu %lu %lu %lu %lu", &k, &l, &x1, &y1, &x2, &y2);
+        fscanf(fp, "%llu %llu %llu %llu %llu %llu", &k, &l, &x1, &y1, &x2, &y2);
         Element *e = new Element();
         e->x1 = x1;
         e->x2 = x2;
@@ -186,23 +186,23 @@ Mesh *Mesh::loadFromFile(const char *filename, MeshSource src)
         elementsMap[t] = e;
     }
 
-    fscanf(fp, "%lu", &nodes);
+    fscanf(fp, "%llu", &nodes);
     nodesVector.resize(nodes);
 
     for (uint64_t i=0; i<nodes; ++i) {
         uint64_t node_id;
         uint64_t nr_elems;
-        fscanf(fp, "%lu %lu", &node_id, &nr_elems);
+        fscanf(fp, "%llu %llu", &node_id, &nr_elems);
         Node *n = new Node(node_id);
         nodesVector[node_id-1] = n;
         for (uint64_t q=0; q<nr_elems; ++q) {
             uint64_t k, l;
-            fscanf(fp, "%lu %lu", &k, &l);
+            fscanf(fp, "%llu %llu", &k, &l);
             n->addElement(elementsMap[std::tuple<uint64_t,uint64_t>(k,l)]);
         }
         if (nr_elems > 1) {
             uint64_t leftSon, rightSon;
-            fscanf(fp, "%lu %lu", &leftSon, &rightSon);
+            fscanf(fp, "%llu %llu", &leftSon, &rightSon);
             n->n_left = leftSon;
             n->n_right = rightSon;
         }
@@ -258,14 +258,13 @@ bool Mesh::loadFrontalMatrices(const char *filename)
 
         for (int j=0; j<e->n; ++j) {
             double val;
-            fscanf(fp, "%g ", &val);
-            e->rhs[j];
+            fscanf(fp, "%lg ", &val);
         }
 
         for (int j=0; j<e->n; ++j) {
             for (int k=0; k<=j; ++k) {
                 double val;
-                fscanf(fp, "%g ", &val);
+                fscanf(fp, "%lg ", &val);
                 e->matrix[j][k] = e->matrix[k][j] = val;
             }
         }

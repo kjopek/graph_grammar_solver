@@ -624,7 +624,7 @@ void Analysis::debugNode(Node *n)
     printf("Node: %d\n", n->getId());
     printf("  dofs: ");
     for (uint64_t dof : n->getDofs()) {
-        printf("%lu ", dof);
+        printf("%llu ", dof);
     }
     printf("\n");
 }
@@ -634,10 +634,10 @@ void Analysis::printTree(Node *n)
     printf("Node id: %d ", n->getId());
     printf("[");
     for (uint64_t dof : n->getDofs()) {
-        printf("%lu, ", dof);
+        printf("%llu, ", dof);
     }
     printf("]");
-    printf(" elim: %d\n", n->getDofsToElim());
+    printf(" elim: %llu\n", n->getDofsToElim());
 
     if(n->getLeft() != NULL && n->getRight() != NULL) {
         printTree(n->getLeft());
@@ -648,9 +648,9 @@ void Analysis::printTree(Node *n)
 
 void Analysis::printElement(Element *e)
 {
-    printf("E[%d,%d] at %d x %d -> %d x %d = [", e->k, e->l, e->x1, e->y1, e->x2, e->y2);
+    printf("E[%llu,%llu] at %llu x %llu -> %llu x %llu = [", e->k, e->l, e->x1, e->y1, e->x2, e->y2);
     for (uint64_t dof : e->dofs) {
-        printf("%d, ", dof);
+        printf("%llu, ", dof);
     }
     printf("]\n");
 }
