@@ -19,7 +19,6 @@ EquationSystem::EquationSystem(unsigned long n, SolverMode mode) {
 void EquationSystem::allocate()
 {
     unsigned long i;
-    std::cout << "allocating!" << std::endl;
     // we are working on continuous area of memory
 
     //matrix = new double*[n];

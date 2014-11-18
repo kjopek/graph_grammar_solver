@@ -380,8 +380,8 @@ void Analysis::doAnalise(Mesh *mesh)
 void Analysis::mergeAnaliser(Node *node)
 {
     if (node->getLeft() != NULL && node->getRight() != NULL) {
-        node->leftPlaces = new uint64_t[node->getLeft()->getDofs().size() - node->getLeft()->getDofsToElim()];
-        node->rightPlaces = new uint64_t[node->getRight()->getDofs().size() - node->getRight()->getDofsToElim()];
+        node->leftPlaces.resize(node->getLeft()->getDofs().size() - node->getLeft()->getDofsToElim());
+        node->rightPlaces.resize(node->getRight()->getDofs().size() - node->getRight()->getDofsToElim());
 
         map<uint64_t, uint64_t> reverseMap;
 

@@ -35,6 +35,8 @@ class Node {
           ar & n_right;
           ar & l;
           ar & r;  
+          ar & leftPlaces;  
+          ar & rightPlaces;  
         }
       
         int node = -1;
@@ -46,27 +48,24 @@ class Node {
         std::vector<uint64_t> dofs;
 
         uint64_t dofsToElim;
-        EquationSystem *system;
 
     public:
+        EquationSystem *system; // TODO: temporary, add friend class for serialization or sth.
+        
         int n_left = -1;
         int n_right = -1;
         
         int l=0;
         int r=0;
 
-        uint64_t *leftPlaces = NULL;
-        uint64_t *rightPlaces = NULL;
+        std::vector<uint64_t> leftPlaces;;
+        std::vector<uint64_t> rightPlaces;
         
         Node(): node(0), system(NULL) {}
         
         Node(int num) : node(num), system(NULL) {}
         ~Node() {
             delete system;
-            if (leftPlaces != NULL)
-                delete [] leftPlaces;
-            if (rightPlaces != NULL)
-                delete [] rightPlaces;
         }
 
         void setLeft(Node *left);
