@@ -2,18 +2,24 @@
 #include <string>
 #include <cmath>
 #include <cstdlib>
+#include <iostream>
 
 extern "C" {
 #include <cblas.h>
 #include <clapack.h>
 }
 
-EquationSystem::EquationSystem(unsigned long n, SolverMode mode)
+EquationSystem::EquationSystem(unsigned long n, SolverMode mode) {
+  this->n    = n;
+  this->mode = mode;
+  
+  allocate();
+}
+  
+void EquationSystem::allocate()
 {
-    this->n = n;
-    this->mode = mode;
     unsigned long i;
-
+    std::cout << "allocating!" << std::endl;
     // we are working on continuous area of memory
 
     //matrix = new double*[n];
@@ -43,7 +49,6 @@ EquationSystem::~EquationSystem()
         free((void*)origPtr);
         free((void*)matrix);
     }
-
 }
 
 int EquationSystem::eliminate(const int rows)

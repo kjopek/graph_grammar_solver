@@ -11,10 +11,32 @@
 
 #include <set>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/vector.hpp>
+
 class Mesh;
 
 class Node {
     private:
+        friend class boost::serialization::access;
+
+        template<class Archive>
+        void serialize(Archive & ar, const unsigned int version) {
+          ar & node;
+          ar & left;
+          ar & right;
+          ar & parent;
+          ar & mergedElements;
+          ar & production;
+          ar & dofs;
+          ar & dofsToElim;
+          ar & n_left;
+          ar & n_right;
+          ar & l;
+          ar & r;  
+        }
+      
         int node = -1;
         Node *left = NULL;
         Node *right = NULL;
@@ -35,8 +57,10 @@ class Node {
 
         uint64_t *leftPlaces = NULL;
         uint64_t *rightPlaces = NULL;
-
-        Node(int num) : node(num) {}
+        
+        Node(): node(0), system(NULL) {}
+        
+        Node(int num) : node(num), system(NULL) {}
         ~Node() {
             delete system;
             if (leftPlaces != NULL)
