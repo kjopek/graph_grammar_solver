@@ -90,6 +90,7 @@ class Node {
         uint64_t getDofsToElim() const;
 
         void allocateSystem(SolverMode mode);
+        void deallocateSystem();
 
         void setProduction(std::string &prodname);
         std::string &getProduction();

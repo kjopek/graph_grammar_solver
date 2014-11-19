@@ -92,6 +92,12 @@ void Node::allocateSystem(SolverMode mode)
     //printf("Size: %d x %d\n", system->n, system->n);
 }
 
+void Node::deallocateSystem() {
+  if(this->system)
+    delete this->system;
+  this->system = NULL;
+}
+
 void Node::fillin() const
 {
     int i;
