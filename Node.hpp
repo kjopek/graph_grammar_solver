@@ -106,8 +106,8 @@ class Node {
         void eliminate() const;
         void bs() const;
         
-        unsigned long getSizeInMemory();
-        unsigned long getFLOPs();
+        unsigned long getSizeInMemory(bool recursive = true);
+        unsigned long getFLOPs(bool recursive = true);
         unsigned long getMemoryRearrangements();
 
         static bool isNeighbour (Node *node, Node *parent);

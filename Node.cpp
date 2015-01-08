@@ -339,23 +339,23 @@ bool Node::isLooped(std::set<Node*>* n){
     return false;
 }
 
-unsigned long Node::getSizeInMemory()
+unsigned long Node::getSizeInMemory(bool recursive)
 {
     unsigned long total = this->dofs.size()*this->dofs.size()*sizeof(double) + this->dofs.size()*sizeof(double*);
-    if (left != NULL && right != NULL) {
+    if (recursive && left != NULL && right != NULL) {
         total += left->getSizeInMemory() + right->getSizeInMemory();
     }
     return total;
 }
 
-unsigned long Node::getFLOPs()
+unsigned long Node::getFLOPs(bool recursive)
 {
     auto flops = [](unsigned int a, unsigned int b) {
         return a*(6*b*b-6*a*b+6*b+2*a*a-3*a+1)/6;
     };
 
     unsigned long total = flops(this->getDofsToElim(), this->getDofs().size());
-    if (left != NULL && right != NULL) {
+    if (recursive && left != NULL && right != NULL) {
         total += left->getFLOPs() + right->getFLOPs();
     }
 
