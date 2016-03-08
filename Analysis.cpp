@@ -333,12 +333,15 @@ void Analysis::nodeAnaliser(Node *node, set<uint64_t> *parent)
                               rDofs->begin(), rDofs->end(),
                               std::inserter(*common, common->begin()));
 
-        delete (lDofs);
-        delete (rDofs);
+
 
         for (auto p = parent->cbegin(); p!=parent->cend(); ++p) {
-            common->insert(*p);
+            if (lDofs->count(*p) || rDofs->count(*p))
+                common->insert(*p);
         }
+
+        delete (lDofs);
+        delete (rDofs);
 
         Analysis::nodeAnaliser(node->getLeft(), common);
         Analysis::nodeAnaliser(node->getRight(), common);
