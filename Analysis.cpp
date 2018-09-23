@@ -7,7 +7,7 @@ void Analysis::nodeAnaliser(Node *node, set<int> *parent)
 {
     auto getAllDOFs = [] (Node *n) {
         set<int> *dofs = new set<int>();
-        for (Element *e : n->getElements()) {
+        for (struct element *e : n->getElements()) {
             for (int dof : e->dofs)
                 dofs->insert(dof);
         }
@@ -102,8 +102,8 @@ void Analysis::debugNode(Node *n)
 {
     printf("Node: %d\n", n->getId());
     printf("  dofs: ");
-    for (uint64_t dof : n->getDofs()) {
-        printf("%llu ", dof);
+    for (int dof : n->getDofs()) {
+        printf("%d ", dof);
     }
     printf("\n");
 }
@@ -112,11 +112,11 @@ void Analysis::printTree(Node *n)
 {
     printf("Node id: %d ", n->getId());
     printf("[");
-    for (uint64_t dof : n->getDofs()) {
-        printf("%llu, ", dof);
+    for (int dof : n->getDofs()) {
+        printf("%d, ", dof);
     }
     printf("]");
-    printf(" elim: %llu\n", n->getDofsToElim());
+    printf(" elim: %d\n", n->getDofsToElim());
 
     if(n->getLeft() != NULL && n->getRight() != NULL) {
         printTree(n->getLeft());
@@ -124,13 +124,3 @@ void Analysis::printTree(Node *n)
     }
 
 }
-
-void Analysis::printElement(Element *e)
-{
-    printf("E[%llu,%llu] at %llu x %llu -> %llu x %llu = [", e->k, e->l, e->x1, e->y1, e->x2, e->y2);
-    for (uint64_t dof : e->dofs) {
-        printf("%llu, ", dof);
-    }
-    printf("]\n");
-}
-

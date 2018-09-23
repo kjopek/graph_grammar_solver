@@ -27,16 +27,6 @@ void Node::clearElements(){
     mergedElements.clear();
 }
 
-void Node::setProduction(std::string &prodname)
-{
-    production = prodname;
-}
-
-std::string &Node::getProduction()
-{
-    return (production);
-}
-
 Node *Node::getLeft() const
 {
     return (left);

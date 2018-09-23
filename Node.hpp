@@ -19,8 +19,7 @@ class Node {
         Node *left = NULL;
         Node *right = NULL;
         Node *parent = NULL;
-        std::vector<Element *> mergedElements;
-        std::string production;
+        std::vector<struct element *> mergedElements;
         std::vector<int> dofs;
 
         int dofsToElim;
@@ -67,9 +66,6 @@ class Node {
 
         void allocateSystem(SolverMode mode);
         void deallocateSystem();
-
-        void setProduction(std::string &prodname);
-        std::string &getProduction();
 
         void fillin() const;
         void merge() const;
