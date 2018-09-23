@@ -36,7 +36,10 @@ public:
 
     virtual ~EquationSystem();
 
-    int eliminate(const int rows);
+    int eliminate(int rows);
+    int index(int row, int col) const {
+        return (col * n + row);
+    }
 
     // DEBUG
     void print() const;

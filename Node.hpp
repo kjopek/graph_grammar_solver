@@ -6,7 +6,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-#include "Element.hpp"
+#include "element.hpp"
 #include "EquationSystem.hpp"
 
 #include <set>
@@ -21,6 +21,7 @@ class Node {
         Node *parent = NULL;
         std::vector<struct element *> mergedElements;
         std::vector<int> dofs;
+	std::vector<int> elementDofs;
 
         int dofsToElim;
 
@@ -51,12 +52,14 @@ class Node {
         Node *getRight() const;
         Node *getParent() const;
 
-        void addElement (Element *e);
-        std::vector<Element *> &getElements();
         void clearElements();
 
         void addDof(int dof);
         std::vector<int> &getDofs();
+
+	void setElementDofs(std::vector<int> &dofs);
+	std::vector<int> &getElementDofs();
+
         void clearDofs();
 
         int getId() const;

@@ -18,15 +18,6 @@ void Node::setParent(Node *parent)
     parent = parent;
 }
 
-void Node::addElement(Element *e)
-{
-    mergedElements.push_back(e);
-}
-
-void Node::clearElements(){
-    mergedElements.clear();
-}
-
 Node *Node::getLeft() const
 {
     return (left);
@@ -40,11 +31,6 @@ Node *Node::getRight() const
 Node *Node::getParent() const
 {
     return (parent);
-}
-
-std::vector<Element *> &Node::getElements()
-{
-    return (mergedElements);
 }
 
 int Node::getId() const
@@ -91,7 +77,10 @@ void Node::fillin() const
 {
     for (int j = 0; j < system->n; ++j) {
         for (int i = 0; i < system->n; ++i) {
-            system->matrix[j][i] = i == j ? 1.0 : 0.0;
+            int idx;
+
+            idx = system->index(i, j);
+            system->matrix[idx] = i == j ? 1.0 : 0.0;
         }
         system->rhs[j] = 1.0;
     }
@@ -100,7 +89,7 @@ void Node::fillin() const
 void Node::merge() const
 {
     int i, j;
-    int x, y;
+    int x, y, idx;
 
     int lDofsSize, lDofsToElim;
     int rDofsSize, rDofsToElim;
@@ -115,7 +104,8 @@ void Node::merge() const
         x = leftPlaces[j - lDofsToElim];
         for (i = lDofsToElim; i < lDofsSize; ++i) {
 	    y = leftPlaces[i - lDofsToElim];
-            system->matrix[x][y] = left->system->matrix[j][i];
+	    idx = system->index(x, y);
+            system->matrix[idx] = left->system->matrix[system->index(j, i)];
         }
         system->rhs[x] = left->system->rhs[j];
     }
@@ -123,7 +113,8 @@ void Node::merge() const
         x = rightPlaces[j - rDofsToElim];
         for (i = rDofsToElim; i < rDofsSize; ++i) {
             y = rightPlaces[i - rDofsToElim];
-            system->matrix[x][y] += right->system->matrix[j][i];
+	    idx = system->index(x, y);
+            system->matrix[idx] += right->system->matrix[system->index(j, i)];
         }
         system->rhs[x] += right->system->rhs[j];
     }
@@ -161,7 +152,7 @@ int Node::treeSize(){
 unsigned long Node::getSizeInMemory(bool recursive)
 {
     unsigned long total = (dofs.size() + 1) *
-        dofs.size() * sizeeof(double);
+        dofs.size() * sizeof(double);
     if (recursive && left != NULL && right != NULL) {
         total += left->getSizeInMemory() + right->getSizeInMemory();
     }

@@ -1,3 +1,11 @@
+/*
+ * Tree analyser.
+ *
+ * Please note that this code is far far away from being optimal.
+ * First of all, such analysis should be done just once per tree
+ * and cached together with tree structure. This has yet to be done.
+ */
+
 #include "Analysis.hpp"
 #include <algorithm>
 
@@ -6,12 +14,9 @@ using namespace std;
 void Analysis::nodeAnaliser(Node *node, set<int> *parent)
 {
     auto getAllDOFs = [] (Node *n) {
-        set<int> *dofs = new set<int>();
-        for (struct element *e : n->getElements()) {
-            for (int dof : e->dofs)
-                dofs->insert(dof);
-        }
-        return dofs;
+        vector<int> &elementDofs = n->getElementDofs();
+        set<int> *dofs = new set<int>(elementDofs.begin(), elementDofs.end());
+        return (dofs);
     };
 
     set<int> *common;
@@ -24,8 +29,6 @@ void Analysis::nodeAnaliser(Node *node, set<int> *parent)
         std::set_intersection(lDofs->begin(), lDofs->end(),
             rDofs->begin(), rDofs->end(),
             std::inserter(*common, common->begin()));
-
-
 
         for (auto p = parent->cbegin(); p!=parent->cend(); ++p) {
             if (lDofs->count(*p) || rDofs->count(*p))
@@ -102,7 +105,7 @@ void Analysis::debugNode(Node *n)
 {
     printf("Node: %d\n", n->getId());
     printf("  dofs: ");
-    for (int dof : n->getDofs()) {
+    for (int dof: n->getDofs()) {
         printf("%d ", dof);
     }
     printf("\n");
@@ -112,7 +115,7 @@ void Analysis::printTree(Node *n)
 {
     printf("Node id: %d ", n->getId());
     printf("[");
-    for (int dof : n->getDofs()) {
+    for (int dof: n->getDofs()) {
         printf("%d, ", dof);
     }
     printf("]");
