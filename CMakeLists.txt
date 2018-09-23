@@ -10,5 +10,5 @@ include_directories(/usr/local/include/)
 link_directories(/usr/local/lib/)
 link_directories(/opt/local/lib/) # For Atlas installed via OS X MacPorts 
 
-add_library(SolverLib SHARED EquationSystem.cpp Analysis.cpp Node.cpp Mesh.cpp log.c)
-target_link_libraries(SolverLib -lcblas -lalapack)
+add_executable(ElementSolver EquationSystem.cpp Analysis.cpp Node.cpp Mesh.cpp log.c main.cpp)
+target_link_libraries(ElementSolver -lalapack -lcblas -lf77blas)
