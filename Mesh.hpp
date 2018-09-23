@@ -15,18 +15,16 @@ class Mesh {
         std::vector<Node *> nodes;
         int dofs = 0;
         Node *root = NULL;
+        void addNode(Node *n);
 
     public:
         Mesh() { }
-
-        void addNode(Node *n);
-
-        static Mesh *loadFromFile(const char *filename);
+        static Mesh *loadTreeFromFile(const char *filename);
 
 	Node *getRootNode();
-        int getPolynomial();
         void setDofs(int dofs);
         int getDofs();
+        void loadLeafMatrix(int nodeId, double *matrix);
         
         void setRootNode(Node * root);
 

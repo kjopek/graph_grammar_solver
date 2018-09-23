@@ -1,7 +1,9 @@
-#include "Node.hpp"
-#include <set>
 #include <algorithm>
+#include <set>
+#include <string.h>
+
 #include "Analysis.hpp"
+#include "Node.hpp"
 
 void Node::setLeft(Node *left)
 {
@@ -144,6 +146,13 @@ void Node::bs() const
 {
 }
 
+void Node::loadMatrix(double *data)
+{
+    size_t nbytes;
+
+    nbytes = system->n * system->n;
+    memcpy((void *)system->matrix, (void *)data, nbytes);
+}
 
 /* DEBUG*/
 

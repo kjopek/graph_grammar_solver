@@ -76,7 +76,8 @@ class Node {
         unsigned long getSizeInMemory(bool recursive = true);
         unsigned long getFLOPs(bool recursive = true);
         unsigned long getMemoryRearrangements();
-        
+
+	void loadMatrix(double *data);
         /* DEBUG */
         int treeSize();
         /* END OF DEBUG */

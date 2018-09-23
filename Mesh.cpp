@@ -13,7 +13,7 @@ void Mesh::addNode(Node *n)
 
 Node *Mesh::getRootNode()
 {
-    return nodes[0];
+    return (nodes[0]);
 }
 
 void Mesh::setDofs(int dofs)
@@ -26,7 +26,7 @@ int Mesh::getDofs()
     return (dofs);
 }
 
-Mesh *Mesh::loadFromFile(const char *filename)
+Mesh *Mesh::loadTreeFromFile(const char *filename)
 {
     /*
      * This procedure is not optimized and could be (together with analysis)
@@ -113,16 +113,23 @@ Mesh *Mesh::loadFromFile(const char *filename)
 
 	    node->setLeft(nodesVector[leftSon - 1]);
             node->setRight(nodesVector[rightSon - 1]);
-        } else {
+        } else
             node->setElementDofs(elementToDofs[std::make_tuple(level, seqno)]);
-	}
     }
 
-    for (int ii = 0; ii < nodes; ii++) {
+    for (int ii = 0; ii < nodes; ii++)
         mesh->addNode(nodesVector[ii]);
-    }
+
 
     fclose(fp);
     return (mesh);
 }
 
+void Mesh::loadLeafMatrix(int nodeId, double *matrix)
+{
+    Node *node = nodes[nodeId];
+
+    LOG_ASSERT(node->getRight() == NULL && node->getLeft() == NULL,
+        "Cannot load matrix data into non-leaf node.");
+    node->loadMatrix(matrix);
+}
