@@ -61,7 +61,7 @@ int EquationSystem::eliminate(const int rows)
         }
 
         cblas_dgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, k, k, m, -1.0,
-            matrix[0] + m, n, matrix[m], n, 1.0, matrix[m] + m, n);
+            matrix + m, n, matrix + m * n, n, 1.0, matrix + (n + 1) * m, n);
     } else if (mode == CHOLESKY) {
         error = clapack_dpotrf(CblasColMajor, CblasUpper, m, matrix, n);
         if (error != 0) {
@@ -85,7 +85,7 @@ void EquationSystem::print() const
 {
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
-            std::printf("% .6f ", matrix[i][j]);
+            std::printf("% .6f ", *(matrix + i * n + j));
         }
         std::printf (" | % .6f\n", rhs[i]);
     }
