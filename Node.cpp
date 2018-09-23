@@ -5,105 +5,105 @@
 
 void Node::setLeft(Node *left)
 {
-    this->left = left;
+    left = left;
 }
 
 void Node::setRight(Node *right)
 {
-    this->right = right;
+    right = right;
 }
 
 void Node::setParent(Node *parent)
 {
-    this->parent = parent;
+    parent = parent;
 }
 
 void Node::addElement(Element *e)
 {
-    this->mergedElements.push_back(e);
+    mergedElements.push_back(e);
 }
 
 void Node::clearElements(){
-    this->mergedElements.clear();
+    mergedElements.clear();
 }
 
 void Node::setProduction(std::string &prodname)
 {
-    this->production = prodname;
+    production = prodname;
 }
 
 std::string &Node::getProduction()
 {
-    return this->production;
+    return (production);
 }
 
 Node *Node::getLeft() const
 {
-    return this->left;
+    return (left);
 }
 
 Node *Node::getRight() const
 {
-    return this->right;
+    return (right);
 }
 
 Node *Node::getParent() const
 {
-    return this->parent;
+    return (parent);
 }
 
 std::vector<Element *> &Node::getElements()
 {
-    return this->mergedElements;
+    return (mergedElements);
 }
 
 int Node::getId() const
 {
-    return this->node;
+    return (node);
 }
 
-void Node::addDof(uint64_t dof)
+void Node::addDof(int dof)
 {
-    this->dofs.push_back(dof);
+    dofs.push_back(dof);
 }
 
-std::vector<uint64_t> &Node::getDofs()
+std::vector<int> &Node::getDofs()
 {
-    return this->dofs;
+    return (dofs);
 }
 
 void Node::clearDofs(){
-    this->dofs.clear();
+    dofs.clear();
 }
 
-void Node::setDofsToElim(uint64_t dofs)
+void Node::setDofsToElim(int dofs)
 {
-    this->dofsToElim = dofs;
+    dofsToElim = dofs;
 }
 
-uint64_t Node::getDofsToElim() const
+int Node::getDofsToElim() const
 {
-    return this->dofsToElim;
+    return (dofsToElim);
 }
 
 void Node::allocateSystem(SolverMode mode)
 {
-    this->system = new EquationSystem(this->getDofs().size(), mode);
+    system = new EquationSystem(getDofs().size(), mode);
 }
 
 void Node::deallocateSystem()
 {
-    if (this->system)
-      delete this->system;
+    if (system)
+      delete system;
 }
 
 void Node::fillin() const
 {
     for (int j = 0; j < system->n; ++j) {
         for (int i = 0; i < system->n; ++i) {
-            this->system->matrix[j][i] = i == j ? 1.0 : 0.0;
+            system->matrix[j][i] = i == j ? 1.0 : 0.0;
         }
-        this->system->rhs[j] = 1.0;
+        system->rhs[j] = 1.0;
     }
 }
 
@@ -112,19 +112,30 @@ void Node::merge() const
     int i, j;
     int x, y;
 
-    for (j = getLeft()->getDofsToElim(); j < getLeft()->getDofs().size(); ++j) {
-        for (i = getLeft()->getDofsToElim(); i < getLeft()->getDofs().size(); ++i) {
-            system->matrix[leftPlaces[j - getLeft()->getDofsToElim()]][leftPlaces[i - getLeft()->getDofsToElim()]] =
-                    left->system->matrix[j][i];
+    int lDofsSize, lDofsToElim;
+    int rDofsSize, rDofsToElim;
+
+    lDofsSize = getLeft()->getDofs().size();
+    lDofsToElim = getLeft()->getDofsToElim();
+
+    rDofsSize = getRight()->getDofs().size();
+    rDofsToElim = getRight()->getDofsToElim();
+
+    for (j = lDofsToElim; j < lDofsSize; ++j) {
+        x = leftPlaces[j - lDofsToElim];
+        for (i = lDofsToElim; i < lDofsSize; ++i) {
+	    y = leftPlaces[i - lDofsToElim];
+            system->matrix[x][y] = left->system->matrix[j][i];
         }
-        system->rhs[leftPlaces[j-getLeft()->getDofsToElim()]] = left->system->rhs[j];
+        system->rhs[x] = left->system->rhs[j];
     }
-    for (j=getRight()->getDofsToElim(); j<getRight()->getDofs().size(); ++j) {
-        for (i=getRight()->getDofsToElim(); i<getRight()->getDofs().size(); ++i) {
-            system->matrix[rightPlaces[j-getRight()->getDofsToElim()]][rightPlaces[i-getRight()->getDofsToElim()]] +=
-                    right->system->matrix[j][i];
+    for (j = rDofsToElim; j < rDofsSize; ++j) {
+        x = rightPlaces[j - rDofsToElim];
+        for (i = rDofsToElim; i < rDofsSize; ++i) {
+            y = rightPlaces[i - rDofsToElim];
+            system->matrix[x][y] += right->system->matrix[j][i];
         }
-        system->rhs[rightPlaces[j-getRight()->getDofsToElim()]] += right->system->rhs[j];
+        system->rhs[x] += right->system->rhs[j];
     }
 }
 
@@ -147,19 +158,20 @@ void Node::bs() const
 
 int Node::treeSize(){
     int ret = 1;
-    if (this->getLeft() != NULL){
-        ret += this->getLeft()->treeSize();
-    }
-    if (this->getRight() != NULL){
-        ret += this->getRight()->treeSize();
-    }
-    return ret;
+
+    if (getLeft() != NULL)
+    	    ret += getLeft()->treeSize();
+
+    if (getRight() != NULL)
+        ret += getRight()->treeSize();
+
+    return (ret);
 }
 
 unsigned long Node::getSizeInMemory(bool recursive)
 {
     unsigned long total = (dofs.size() + 1) *
-        dofs.size() * sizeof(double);
+        dofs.size() * sizeeof(double);
     if (recursive && left != NULL && right != NULL) {
         total += left->getSizeInMemory() + right->getSizeInMemory();
     }
@@ -190,10 +202,10 @@ unsigned long Node::getMemoryRearrangements()
         unsigned long memRight = (right->getDofs().size() - right->getDofsToElim());
         memRight *= memRight;
 
-        total = memLeft+memRight+left->getMemoryRearrangements()+right->getMemoryRearrangements();
+        total = memLeft + memRight + left->getMemoryRearrangements() + right->getMemoryRearrangements();
     }
 
-    return total;
+    return (total);
 }
 
 
