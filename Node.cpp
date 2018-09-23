@@ -52,6 +52,16 @@ void Node::clearDofs(){
     dofs.clear();
 }
 
+void Node::setElementDofs(std::vector<int> &dofs)
+{
+    elementDofs = dofs;
+}
+
+std::vector<int> &Node::getElementDofs()
+{
+    return (elementDofs);
+}
+
 void Node::setDofsToElim(int dofs)
 {
     dofsToElim = dofs;

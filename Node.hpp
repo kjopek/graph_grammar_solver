@@ -6,7 +6,6 @@
 #include <cstdio>
 #include <cstdlib>
 
-#include "element.hpp"
 #include "EquationSystem.hpp"
 
 #include <set>
@@ -19,7 +18,6 @@ class Node {
         Node *left = NULL;
         Node *right = NULL;
         Node *parent = NULL;
-        std::vector<struct element *> mergedElements;
         std::vector<int> dofs;
 	std::vector<int> elementDofs;
 
