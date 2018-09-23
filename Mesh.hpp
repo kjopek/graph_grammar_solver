@@ -22,7 +22,6 @@ class Mesh {
         void addNode(Node *n);
 
         static Mesh *loadFromFile(const char *filename);
-        bool loadFrontalMatrices(const char *filename);
 
 	Node *getRootNode();
         int getPolynomial();
