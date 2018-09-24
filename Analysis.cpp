@@ -15,7 +15,7 @@ void Analysis::nodeAnaliser(Node *node, set<int> &parent)
 {
     auto getAllDOFs = [] (Node *n, set<int> &dofs) {
         vector<int> &elementDofs = n->getElementDofs();
-        parent.insert(elementDofs.begin(), elementDofs.end());
+        dofs.insert(elementDofs.begin(), elementDofs.end());
     };
 
     set<int> common;
@@ -26,8 +26,8 @@ void Analysis::nodeAnaliser(Node *node, set<int> &parent)
         getAllDOFs(node->getLeft(), lDofs);
         getAllDOFs(node->getRight(), rDofs);
 
-        std::set_intersection(lDofsb.egin(), lDofs->end(),
-            rDofs->begin(), rDofs->end(),
+        std::set_intersection(lDofs.begin(), lDofs.end(),
+            rDofs.begin(), rDofs.end(),
             std::inserter(common, common.begin()));
 
         for (auto p = parent.cbegin(); p != parent.cend(); ++p) {
@@ -64,12 +64,10 @@ void Analysis::nodeAnaliser(Node *node, set<int> &parent)
 void Analysis::doAnalise(Mesh *mesh)
 {
     Node *root = mesh->getRootNode();
-    std::set<int> *parent = new set<int>();
+    std::set<int> parent;;
 
     Analysis::nodeAnaliser(root, parent);
     Analysis::mergeAnaliser(root);
-
-    delete parent;
 }
 
 void Analysis::mergeAnaliser(Node *node)

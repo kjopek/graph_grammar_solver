@@ -16,7 +16,7 @@ class Analysis {
     public:
         static void enumerateDOF(Mesh *mesh);
         static void doAnalise(Mesh *mesh);
-        static void nodeAnaliser(Node *n, std::set<int> *parent);
+        static void nodeAnaliser(Node *n, std::set<int> &parent);
 
         // for debug use
         static void debugNode(Node *n);
