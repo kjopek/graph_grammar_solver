@@ -64,7 +64,7 @@ void Analysis::nodeAnaliser(Node *node, set<int> &parent)
 void Analysis::doAnalise(Mesh *mesh)
 {
     Node *root = mesh->getRootNode();
-    std::set<int> parent;;
+    std::set<int> parent;
 
     Analysis::nodeAnaliser(root, parent);
     Analysis::mergeAnaliser(root);
