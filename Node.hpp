@@ -68,7 +68,6 @@ class Node {
         void allocateSystem(SolverMode mode);
         void deallocateSystem();
 
-        void fillin() const;
         void merge() const;
         void eliminate() const;
         void bs() const;
