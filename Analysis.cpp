@@ -88,11 +88,15 @@ void Analysis::mergeAnaliser(Node *node)
         for (int i = 0; i < node->getDofs().size(); ++i)
             reverseMap[node->getDofs()[i]] = i;
 
-        for (int i = leftDofsElim; i < leftDofsSize; ++i)
-            node->leftPlaces[i - leftDofsElim] = reverseMap[node->getLeft()->getDofs()[i]];
+        for (int i = leftDofsElim; i < leftDofsSize; ++i) {
+            node->leftPlaces[i - leftDofsElim] =
+                reverseMap[node->getLeft()->getDofs()[i]];
+	}
 
-        for (int i = rightDofsElim; i < rightDofsSize; ++i)
-            node->rightPlaces[i - rightDofsElim] = reverseMap[node->getRight()->getDofs()[i]];
+        for (int i = rightDofsElim; i < rightDofsSize; ++i) {
+            node->rightPlaces[i - rightDofsElim] =
+                reverseMap[node->getRight()->getDofs()[i]];
+        }
 
         Analysis::mergeAnaliser(node->getLeft());
         Analysis::mergeAnaliser(node->getRight());
