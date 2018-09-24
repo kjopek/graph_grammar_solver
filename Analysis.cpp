@@ -43,6 +43,9 @@ void Analysis::nodeAnaliser(Node *node, std::set<int> &parent)
                 common.insert(*p);
         }
 
+        lDofs.clear();
+        rDofs.clear();
+
         Analysis::nodeAnaliser(node->getLeft(), common);
         Analysis::nodeAnaliser(node->getRight(), common);
 
