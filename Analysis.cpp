@@ -11,44 +11,42 @@
 
 using namespace std;
 
-void Analysis::nodeAnaliser(Node *node, set<int> *parent)
+void Analysis::nodeAnaliser(Node *node, set<int> &parent)
 {
-    auto getAllDOFs = [] (Node *n) {
+    auto getAllDOFs = [] (Node *n, set<int> &dofs) {
         vector<int> &elementDofs = n->getElementDofs();
-        set<int> *dofs = new set<int>(elementDofs.begin(), elementDofs.end());
-        return (dofs);
+        parent.insert(elementDofs.begin(), elementDofs.end());
     };
 
-    set<int> *common;
+    set<int> common;
 
     if (node->getLeft() != NULL && node->getRight() != NULL) {
-        set<int> *lDofs = getAllDOFs(node->getLeft());
-        set<int> *rDofs = getAllDOFs(node->getRight());
+        set<int> lDofs;
+	set<int> rDofs;
+        getAllDOFs(node->getLeft(), lDofs);
+        getAllDOFs(node->getRight(), rDofs);
 
-        common = new set<int>;
-        std::set_intersection(lDofs->begin(), lDofs->end(),
+        std::set_intersection(lDofsb.egin(), lDofs->end(),
             rDofs->begin(), rDofs->end(),
-            std::inserter(*common, common->begin()));
+            std::inserter(common, common.begin()));
 
-        for (auto p = parent->cbegin(); p!=parent->cend(); ++p) {
-            if (lDofs->count(*p) || rDofs->count(*p))
-                common->insert(*p);
+        for (auto p = parent.cbegin(); p != parent.cend(); ++p) {
+            if (lDofs.count(*p) || rDofs.count(*p))
+                common.insert(*p);
         }
 
-        delete (lDofs);
-        delete (rDofs);
 
         Analysis::nodeAnaliser(node->getLeft(), common);
         Analysis::nodeAnaliser(node->getRight(), common);
 
     } else {
-        common = getAllDOFs(node);
+        getAllDOFs(node, common);
     }
 
     int i = 0;
 
-    for (int dof: *common) {
-        if (!parent->count(dof)) {
+    for (int dof: common) {
+        if (!parent.count(dof)) {
             node->addDof(dof);
             ++i;
         }
@@ -56,13 +54,11 @@ void Analysis::nodeAnaliser(Node *node, set<int> *parent)
 
     node->setDofsToElim(i);
 
-    for (int dof: *common) {
-        if (parent->count(dof)) {
+    for (int dof: common) {
+        if (parent.count(dof)) {
             node->addDof(dof);
         }
     }
-
-    delete common;
 }
 
 void Analysis::doAnalise(Mesh *mesh)
