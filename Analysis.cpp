@@ -9,6 +9,15 @@
 #include "Analysis.hpp"
 #include <algorithm>
 
+void Analysis::doAnalise(Mesh *mesh)
+{
+    Node *root = mesh->getRootNode();
+    std::set<int> parent;
+
+    Analysis::nodeAnaliser(root, parent);
+    Analysis::mergeAnaliser(root);
+}
+
 void Analysis::nodeAnaliser(Node *node, std::set<int> &parent)
 {
     auto getAllDOFs = [] (Node *n, std::set<int> &dofs) {
@@ -34,7 +43,6 @@ void Analysis::nodeAnaliser(Node *node, std::set<int> &parent)
                 common.insert(*p);
         }
 
-
         Analysis::nodeAnaliser(node->getLeft(), common);
         Analysis::nodeAnaliser(node->getRight(), common);
 
@@ -58,15 +66,6 @@ void Analysis::nodeAnaliser(Node *node, std::set<int> &parent)
             node->addDof(dof);
         }
     }
-}
-
-void Analysis::doAnalise(Mesh *mesh)
-{
-    Node *root = mesh->getRootNode();
-    std::set<int> parent;
-
-    Analysis::nodeAnaliser(root, parent);
-    Analysis::mergeAnaliser(root);
 }
 
 void Analysis::mergeAnaliser(Node *node)
