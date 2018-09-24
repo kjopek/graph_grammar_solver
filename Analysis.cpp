@@ -52,7 +52,7 @@ void Analysis::nodeAnaliser(Node *node, std::set<int> &parent)
 
     int i = 0;
 
-    for (int dof: common) {
+    for (auto dof: common) {
         if (!parent.count(dof)) {
             node->addDof(dof);
             ++i;
@@ -61,7 +61,7 @@ void Analysis::nodeAnaliser(Node *node, std::set<int> &parent)
 
     node->setDofsToElim(i);
 
-    for (int dof: common) {
+    for (auto dof: common) {
         if (parent.count(dof)) {
             node->addDof(dof);
         }
