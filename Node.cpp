@@ -4,6 +4,7 @@
 
 #include "Analysis.hpp"
 #include "Node.hpp"
+#include "log.h"
 
 void Node::setLeft(Node *left)
 {
@@ -134,12 +135,15 @@ void Node::merge() const
 
 void Node::eliminate() const
 {
-    if (left != NULL && right != NULL) {
+    int ret;
+
+    if (left != NULL && right != NULL)
         merge();
-    } else {
+    else
         fillin();
-    }
-    system->eliminate(getDofsToElim());
+
+    ret = system->eliminate(getDofsToElim());
+    LOG_ASSERT(ret == 0, "Elimination failed at node: %d.", node); 
 }
 
 void Node::bs() const

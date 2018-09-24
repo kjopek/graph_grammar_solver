@@ -28,6 +28,7 @@ public:
     unsigned long n;
     double *matrix;
     double *rhs;
+    int *ipiv = NULL;
 
     EquationSystem(): rhs(NULL), matrix(NULL) {};
     EquationSystem(unsigned long n, SolverMode mode=LU);
@@ -37,6 +38,7 @@ public:
     virtual ~EquationSystem();
 
     int eliminate(int rows);
+    int solve(int rows);
     int index(int row, int col) const {
         return (col * n + row);
     }

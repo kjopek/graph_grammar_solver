@@ -1,4 +1,4 @@
-#include "EquationSystem.hpp"
+
 #include <string.h>
 #include <cmath>
 #include <cstdlib>
@@ -8,6 +8,9 @@ extern "C" {
 #include <cblas.h>
 #include <clapack.h>
 }
+
+#include "log.h"
+#include "EquationSystem.hpp"
 
 EquationSystem::EquationSystem(unsigned long n, SolverMode mode) {
     this->n    = n;
@@ -36,18 +39,20 @@ void EquationSystem::allocate()
 EquationSystem::~EquationSystem()
 {
     free(matrix);
+    free(ipiv);
 }
 
 int EquationSystem::eliminate(const int rows)
 {
 
-    int error = 0;
+    int error = 0, ret = 0;
 
     const int m = rows;
     const int k = n - rows;
 
     if (mode == LU) {
-        int ipiv[m];
+        ret = posix_memalign((void **)&ipiv, 128, m * sizeof(int));
+	LOG_ASSERT(ret == 0, "IPIV allocation error.");
 
         error = clapack_dgetrf(CblasColMajor, m, m, matrix, n, ipiv);
         if (error != 0) {
@@ -61,9 +66,6 @@ int EquationSystem::eliminate(const int rows)
             printf("DGETRS error: %d\n", error);
             return (error);
         }
-
-        cblas_dgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, k, k, m, -1.0,
-            matrix + m, n, matrix + m * n, n, 1.0, matrix + (n + 1) * m, n);
     } else if (mode == CHOLESKY) {
         error = clapack_dpotrf(CblasColMajor, CblasUpper, m, matrix, n);
         if (error != 0) {
@@ -73,14 +75,35 @@ int EquationSystem::eliminate(const int rows)
 
         clapack_dpotrs(CblasColMajor, CblasUpper, m, k, matrix, n,
             matrix + m * n, n);
-
-        cblas_dgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, k, k, m, -1.0,
-            matrix + m, n, matrix + m * n, n, 1.0, matrix + m * (n + 1), n);
     } else {
+        printf("Unknown factorization method: %d.\n", mode);
         return (-1);
     }
+    cblas_dgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, k, k, m, -1.0,
+        matrix + m, n, matrix + m * n, n, 1.0, matrix + (n + 1) * m, n);
 
     return (0);
+}
+
+int EquationSystem::solve(const int rows)
+{
+    int error;
+
+    const int m = rows;
+    const int k = n - rows;
+
+    if (mode == LU) {
+	LOG_ASSERT(ipiv != NULL,
+            "IPIV is NULL. Factorization was not performed?");
+        error = clapack_dgetrs(CblasColMajor, CblasNoTrans, m, 1, matrix, n,
+            ipiv, rhs, n);
+	if (error != 0) {
+		printf("DGETRS error: %d\n", error);
+		return (error);
+	}
+    } else {
+        clapack_dpotrs(CblasColMajor, CblasUpper, m, 1, matrix, n, rhs, n);
+    }
 }
 
 void EquationSystem::print() const
