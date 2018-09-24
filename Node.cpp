@@ -86,19 +86,6 @@ void Node::deallocateSystem()
       delete system;
 }
 
-void Node::fillin() const
-{
-    for (int j = 0; j < system->n; ++j) {
-        for (int i = 0; i < system->n; ++i) {
-            int idx;
-
-            idx = system->index(i, j);
-            system->matrix[idx] = i == j ? 1.0 : 0.0;
-        }
-        system->rhs[j] = 1.0;
-    }
-}
-
 void Node::merge() const
 {
     int i, j;
