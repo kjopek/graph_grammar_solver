@@ -1,5 +1,5 @@
 #include "EquationSystem.hpp"
-#include <string>
+#include <string.h>
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
@@ -24,6 +24,8 @@ void EquationSystem::allocate()
     // Assuming cache line is 64 bytes we want to separate allocations
     // in order to eliminate false sharing.
     posix_memalign((void **)&matrix, 128, n * (n + 1) * sizeof(double));
+    // Perform memset over allocated area to shake page faults.
+    memset((void *)matrix, 0, n * (n + 1) * sizeof(double));
 
     if (matrix == NULL)
         throw std::string("Cannot allocate memory!");
