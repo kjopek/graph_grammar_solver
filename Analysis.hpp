@@ -1,11 +1,12 @@
 #ifndef ANALYSIS_HPP
 #define ANALYSIS_HPP
-#include <set>
-#include <map>
-#include <vector>
-#include <tuple>
-#include <map>
+
 #include <algorithm>
+#include <map>
+#include <set>
+#include <tuple>
+#include <vector>
+
 #include "Mesh.hpp"
 
 class Analysis {
