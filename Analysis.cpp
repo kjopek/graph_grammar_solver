@@ -9,20 +9,19 @@
 #include "Analysis.hpp"
 #include <algorithm>
 
-using namespace std;
-
-void Analysis::nodeAnaliser(Node *node, set<int> &parent)
+void Analysis::nodeAnaliser(Node *node, std::set<int> &parent)
 {
-    auto getAllDOFs = [] (Node *n, set<int> &dofs) {
-        vector<int> &elementDofs = n->getElementDofs();
+    auto getAllDOFs = [] (Node *n, std::set<int> &dofs) {
+        std::vector<int> &elementDofs = n->getElementDofs();
         dofs.insert(elementDofs.begin(), elementDofs.end());
     };
 
-    set<int> common;
+    std::set<int> common;
 
     if (node->getLeft() != NULL && node->getRight() != NULL) {
-        set<int> lDofs;
-	set<int> rDofs;
+        std::set<int> lDofs;
+        std::set<int> rDofs;
+
         getAllDOFs(node->getLeft(), lDofs);
         getAllDOFs(node->getRight(), rDofs);
 
@@ -73,22 +72,27 @@ void Analysis::doAnalise(Mesh *mesh)
 void Analysis::mergeAnaliser(Node *node)
 {
     if (node->getLeft() != NULL && node->getRight() != NULL) {
-        node->leftPlaces.resize(node->getLeft()->getDofs().size() - node->getLeft()->getDofsToElim());
-        node->rightPlaces.resize(node->getRight()->getDofs().size() - node->getRight()->getDofsToElim());
+        int leftDofsSize, leftDofsElim;
+        int rightDofsSize, rightDofsElim;
 
-        map<int, int> reverseMap;
+        std::map<int, int> reverseMap;
 
-        for (int i = 0; i < node->getDofs().size(); ++i) {
+        leftDofsSize = node->getLeft()->getDofs().size();
+        leftDofsElim = node->getLeft()->getDofsToElim();
+        rightDofsSize = node->getRight()->getDofs().size();
+        rightDofsElim = node->getRight()->getDofs().size();
+
+        node->leftPlaces.resize(leftDofsSize - leftDofsElim);
+        node->rightPlaces.resize(rightDofsSize - rightDofsElim);
+
+        for (int i = 0; i < node->getDofs().size(); ++i)
             reverseMap[node->getDofs()[i]] = i;
-        }
 
-        for (int i = node->getLeft()->getDofsToElim(); i < node->getLeft()->getDofs().size(); ++i) {
-            node->leftPlaces[i-node->getLeft()->getDofsToElim()] = reverseMap[node->getLeft()->getDofs()[i]];
-        }
+        for (int i = leftDofsElim; i < leftDofsSize; ++i)
+            node->leftPlaces[i - leftDofsElim] = reverseMap[node->getLeft()->getDofs()[i]];
 
-        for (int i = node->getRight()->getDofsToElim(); i < node->getRight()->getDofs().size(); ++i) {
-            node->rightPlaces[i-node->getRight()->getDofsToElim()] = reverseMap[node->getRight()->getDofs()[i]];
-        }
+        for (int i = rightDofsElim; i < rightDofsSize; ++i)
+            node->rightPlaces[i - rightDofsElim] = reverseMap[node->getRight()->getDofs()[i]];
 
         Analysis::mergeAnaliser(node->getLeft());
         Analysis::mergeAnaliser(node->getRight());
@@ -119,5 +123,4 @@ void Analysis::printTree(Node *n)
         printTree(n->getLeft());
         printTree(n->getRight());
     }
-
 }
