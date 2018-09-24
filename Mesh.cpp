@@ -46,12 +46,12 @@ Mesh *Mesh::loadTreeFromFile(const char *filename)
     for (int ii = 0; ii < ndofs; ii++) {
         int id, temp;
 
-	fscanf(fp, "%d%d", &id, &temp);
+        fscanf(fp, "%d%d", &id, &temp);
 
-	LOG_ASSERT(id >= 1, "Dofs enumeration isn't 1-based (Fortran style).");
-	LOG_ASSERT(id - 1 == ii, "Node list is not ordered.");
-	LOG_ASSERT(temp == 1, "Supernodes with node count > 1 are not supported now.");
-	ndofsFold.push_back(temp);
+        LOG_ASSERT(id >= 1, "Dofs enumeration isn't 1-based (Fortran style).");
+        LOG_ASSERT(id - 1 == ii, "Node list is not ordered.");
+        LOG_ASSERT(temp == 1, "Supernodes with node count > 1 are not supported now.");
+        ndofsFold.push_back(temp);
     }
 
     fscanf(fp, "%d", &nelements);
@@ -61,14 +61,14 @@ Mesh *Mesh::loadTreeFromFile(const char *filename)
         int level, seqno;
         int dofsOfElement;
 
-	std::vector<int> dofs;
+        std::vector<int> dofs;
 
         fscanf(fp, "%d%d%d", &level, &seqno, &dofsOfElement);
-	LOG_ASSERT(level >= 1,
+        LOG_ASSERT(level >= 1,
             "Level enumeration isn't 1-based (Fortran style).");
-	LOG_ASSERT(seqno >= 1,
+        LOG_ASSERT(seqno >= 1,
             "Sequence number isn't 1-based (Fortran style).");
-	LOG_ASSERT(dofsOfElement >= 1, "Invalid number of DOFs per element.");
+        LOG_ASSERT(dofsOfElement >= 1, "Invalid number of DOFs per element.");
 
         for (; dofsOfElement > 0; dofsOfElement--) {
             int dof;
@@ -90,28 +90,28 @@ Mesh *Mesh::loadTreeFromFile(const char *filename)
         int nrElems;
         int level, seqno;
 
-	fscanf(fp, "%d %d", &nodeId, &nrElems);
+        fscanf(fp, "%d %d", &nodeId, &nrElems);
         LOG_ASSERT(nodeId >= 1,
             "Node enumeration isn't 1-based (Fortran style).");
         LOG_ASSERT(nrElems >= 1, "Invalid number of elements in node.");
 
         Node *node = new Node(nodeId);
-	nodeOffset = nodeId - 1;
+        nodeOffset = nodeId - 1;
         nodesVector[nodeOffset] = node;
 
-	for (int jj = 0; jj < nrElems; jj++)
+        for (int jj = 0; jj < nrElems; jj++)
             fscanf(fp, "%d%d", &level, &seqno);
 
         if (nrElems > 1) {
             int leftSon, rightSon;
 
-	    fscanf(fp, "%d%d", &leftSon, &rightSon);
-	    LOG_ASSERT(leftSon >= 1,
+        fscanf(fp, "%d%d", &leftSon, &rightSon);
+        LOG_ASSERT(leftSon >= 1,
                 "Left son isn't 1-based (Fortran style).");
             LOG_ASSERT(rightSon >= 1,
                 "Right son isn't 1-based (Fortran style).");
 
-	    node->setLeft(nodesVector[leftSon - 1]);
+            node->setLeft(nodesVector[leftSon - 1]);
             node->setRight(nodesVector[rightSon - 1]);
         } else
             node->setElementDofs(elementToDofs[std::make_tuple(level, seqno)]);
