@@ -139,8 +139,6 @@ void Node::eliminate() const
 
     if (left != NULL && right != NULL)
         merge();
-    else
-        fillin();
 
     ret = system->eliminate(getDofsToElim());
     LOG_ASSERT(ret == 0, "Elimination failed at node: %d.", node); 
