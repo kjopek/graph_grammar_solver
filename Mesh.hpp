@@ -21,7 +21,7 @@ class Mesh {
         Mesh() { }
         static Mesh *loadTreeFromFile(const char *filename);
 
-	Node *getRootNode();
+        Node *getRootNode();
         void setDofs(int dofs);
         int getDofs();
         void loadLeafMatrix(int nodeId, double *matrix);
