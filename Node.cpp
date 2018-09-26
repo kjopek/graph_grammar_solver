@@ -83,7 +83,7 @@ void Node::allocateSystem(SolverMode mode)
 void Node::deallocateSystem()
 {
     if (system)
-      delete system;
+        delete system;
 }
 
 void Node::merge() const
@@ -105,7 +105,7 @@ void Node::merge() const
         for (i = lDofsToElim; i < lDofsSize; ++i) {
 	    y = leftPlaces[i - lDofsToElim];
 	    idx = system->index(x, y);
-            system->matrix[idx] = left->system->matrix[system->index(j, i)];
+            system->matrix[idx] = left->system->matrix[left->system->index(j, i)];
         }
         system->rhs[x] = left->system->rhs[j];
     }
@@ -114,7 +114,7 @@ void Node::merge() const
         for (i = rDofsToElim; i < rDofsSize; ++i) {
             y = rightPlaces[i - rDofsToElim];
 	    idx = system->index(x, y);
-            system->matrix[idx] += right->system->matrix[system->index(j, i)];
+            system->matrix[idx] += right->system->matrix[right->system->index(j, i)];
         }
         system->rhs[x] += right->system->rhs[j];
     }
@@ -139,7 +139,7 @@ void Node::loadMatrix(double *data)
 {
     size_t nbytes;
 
-    nbytes = system->n * system->n;
+    nbytes = system->n * system->n * sizeof(*system->matrix);
     memcpy((void *)system->matrix, (void *)data, nbytes);
 }
 
