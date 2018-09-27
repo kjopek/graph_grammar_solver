@@ -13,19 +13,18 @@
 class Node {
     private:
         int id = -1;
-        Node *left = NULL;
-        Node *right = NULL;
-        Node *parent = NULL;
+	int leftId = -1;
+	int rightId = -1;
+	int parentId = -1;
+
+	int elimSize;
+
         std::vector<int> dofs;
 	std::vector<int> elementDofs;
-
-        int dofsToElim;
 
     public:
         EquationSystem *system;
         
-        int leftId = -1;
-        int rightId = -1;
         
         int l = 0;
         int r = 0;
@@ -40,13 +39,15 @@ class Node {
             delete system;
         }
 
-        void setLeft(Node *left);
-        void setRight(Node *right);
-        void setParent(Node *parent);
+	int getId() const;
 
-        Node *getLeft() const;
-        Node *getRight() const;
-        Node *getParent() const;
+	int getLeftId() const;
+	int getRightId() const;
+	int getParentId() const;
+
+	void setLeftId(int leftId);
+	void setRightId(int rightId);
+	void setParentId(int parentId);
 
         void clearElements();
 
@@ -58,10 +59,8 @@ class Node {
 
         void clearDofs();
 
-        int getId() const;
-
-        void setDofsToElim(int dofs);
-        int getDofsToElim() const;
+        void setElimSize(int dofs);
+        int getElimSize() const;
 
         void allocateSystem(SolverMode mode);
         void deallocateSystem();

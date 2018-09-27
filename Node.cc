@@ -2,77 +2,77 @@
 #include <set>
 #include <string.h>
 
-#include "Analysis.h"
 #include "Node.h"
 #include "log.h"
 
-void Node::setLeft(Node *left)
-{
-    left = left;
-}
-
-void Node::setRight(Node *right)
-{
-    right = right;
-}
-
-void Node::setParent(Node *parent)
-{
-    parent = parent;
-}
-
-Node *Node::getLeft() const
-{
-    return (left);
-}
-
-Node *Node::getRight() const
-{
-    return (right);
-}
-
-Node *Node::getParent() const
-{
-    return (parent);
-}
-
 int Node::getId() const
 {
-    return (id);
+	return (id);
+}
+
+int Node::getParentId() const
+{
+	return (parentId);
+}
+
+int Node::getLeftId() const
+{
+	return (leftId);
+}
+
+int Node::getRightId() const
+{
+	return (rightId);
+}
+
+void Node::setParentId(int parentId)
+{
+	parentId = parentId;
+}
+
+void Node::setLeftId(int leftId)
+{
+	leftId = leftId;
+}
+
+void Node::setRightId(int rightId)
+{
+	rightId = rightId;
 }
 
 void Node::addDof(int dof)
 {
-    dofs.push_back(dof);
+	dofs.push_back(dof);
 }
 
 std::vector<int> &Node::getDofs()
 {
-    return (dofs);
+	return (dofs);
 }
 
-void Node::clearDofs(){
-    dofs.clear();
+void Node::clearDofs()
+{
+	dofs.clear();
 }
 
 void Node::setElementDofs(std::vector<int> &dofs)
 {
-    elementDofs = dofs;
+	elementDofs = dofs;
 }
 
 std::vector<int> &Node::getElementDofs()
 {
-    return (elementDofs);
+	return (elementDofs);
 }
 
-void Node::setDofsToElim(int dofs)
+void Node::setElimSize(int size)
 {
-    dofsToElim = dofs;
+	elimSize = size;
 }
 
-int Node::getDofsToElim() const
+int Node::getElimSize() const
 {
-    return (dofsToElim);
+	return (elimSize);
 }
 
 void Node::allocateSystem(SolverMode mode)
