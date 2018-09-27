@@ -38,7 +38,7 @@ Node *Node::getParent() const
 
 int Node::getId() const
 {
-    return (node);
+    return (id);
 }
 
 void Node::addDof(int dof)
@@ -128,7 +128,7 @@ void Node::eliminate() const
         merge();
 
     ret = system->eliminate(getDofsToElim());
-    LOG_ASSERT(ret == 0, "Elimination failed at node: %d.", node); 
+    LOG_ASSERT(ret == 0, "Elimination failed at node: %d.", id); 
 }
 
 void Node::bs() const

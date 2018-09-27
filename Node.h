@@ -12,8 +12,7 @@
 
 class Node {
     private:
-        
-        int node = -1;
+        int id = -1;
         Node *left = NULL;
         Node *right = NULL;
         Node *parent = NULL;
@@ -25,8 +24,8 @@ class Node {
     public:
         EquationSystem *system;
         
-        int n_left = -1;
-        int n_right = -1;
+        int leftId = -1;
+        int rightId = -1;
         
         int l = 0;
         int r = 0;
@@ -34,9 +33,9 @@ class Node {
         std::vector<int> leftPlaces;;
         std::vector<int> rightPlaces;
         
-        Node(): node(0), system(NULL) {}
+        Node(): id(-1), system(NULL) {}
         
-        Node(int num) : node(num), system(NULL) {}
+        Node(int id) : id(id), system(NULL) {}
         ~Node() {
             delete system;
         }
