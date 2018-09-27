@@ -6,7 +6,7 @@
  * and cached together with tree structure. This has yet to be done.
  */
 
-#include "Analysis.hpp"
+#include "Analysis.h"
 #include <algorithm>
 
 void Analysis::doAnalise(Mesh *mesh)

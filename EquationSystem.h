@@ -7,8 +7,8 @@
  *      Author: kj
  */
 
-#ifndef EQUATIONSYSTEM_H_
-#define EQUATIONSYSTEM_H_
+#ifndef EQUATIONSYSTEM_H
+#define EQUATIONSYSTEM_H
 
 #include <cstdio>
 #include <cstdlib>
@@ -47,4 +47,4 @@ public:
     void print() const;
 };
 
-#endif /* EQUATIONSYSTEM_H_ */
+#endif // EQUATIONSYSTEM_H

@@ -10,7 +10,7 @@ extern "C" {
 }
 
 #include "log.h"
-#include "EquationSystem.hpp"
+#include "EquationSystem.h"
 
 EquationSystem::EquationSystem(unsigned long n, SolverMode mode) {
     this->n    = n;

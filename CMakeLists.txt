@@ -18,8 +18,8 @@ link_directories(${LLVM_LIBRARY_DIRS})
 
 add_definitions(${LLVM_DEFINITIONS})
 
-add_library(ElementSolverLib STATIC EquationSystem.cpp Analysis.cpp Node.cpp Mesh.cpp log.c)
-add_executable(ElementSolver main.cpp)
+add_library(ElementSolverLib STATIC EquationSystem.cc Analysis.cc Node.cc Mesh.cc Solver.cc log.c)
+add_executable(ElementSolver main.cc)
 
 target_link_libraries(ElementSolverLib -lalapack -lcblas -lf77blas)
 target_link_libraries(ElementSolver -lalapack -lcblas -lf77blas ElementSolverLib LLVMSupport)

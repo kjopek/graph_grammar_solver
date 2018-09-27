@@ -2,8 +2,8 @@
 #include <set>
 #include <string.h>
 
-#include "Analysis.hpp"
-#include "Node.hpp"
+#include "Analysis.h"
+#include "Node.h"
 #include "log.h"
 
 void Node::setLeft(Node *left)

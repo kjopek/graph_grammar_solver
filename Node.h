@@ -1,19 +1,18 @@
-#ifndef NODE_HPP
-#define NODE_HPP
+#ifndef NODE_H
+#define NODE_H
 
 #include <vector>
 #include <string>
 #include <cstdio>
 #include <cstdlib>
 
-#include "EquationSystem.hpp"
+#include "EquationSystem.h"
 
 #include <set>
 
-class Mesh;
-
 class Node {
     private:
+        
         int node = -1;
         Node *left = NULL;
         Node *right = NULL;
@@ -82,4 +81,4 @@ class Node {
         /* END OF DEBUG */
 };
 
-#endif // NODE_HPP
+#endif // NODE_H

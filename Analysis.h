@@ -1,5 +1,5 @@
-#ifndef ANALYSIS_HPP
-#define ANALYSIS_HPP
+#ifndef ANALYSIS_H
+#define ANALYSIS_H
 
 #include <algorithm>
 #include <map>
@@ -7,7 +7,7 @@
 #include <tuple>
 #include <vector>
 
-#include "Mesh.hpp"
+#include "Mesh.h"
 
 class Analysis {
     private:
@@ -22,4 +22,4 @@ class Analysis {
         static void printTree(Node *n);
 };
 
-#endif // ANALYSIS_HPP
+#endif // ANALYSIS_H

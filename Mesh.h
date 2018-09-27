@@ -1,5 +1,5 @@
-#ifndef MESH_HPP
-#define MESH_HPP
+#ifndef MESH_H
+#define MESH_H
 
 #include <cstdio>
 #include <cstdlib>
@@ -7,7 +7,7 @@
 #include <map>
 #include <string>
 #include <vector>
-#include "Node.hpp"
+#include "Node.h"
 #include <cmath>
 
 class Mesh {
@@ -37,4 +37,4 @@ class Mesh {
 };
 
 
-#endif // MESH_HPP
+#endif // MESH_H
