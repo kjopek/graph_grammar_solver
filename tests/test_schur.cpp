@@ -107,20 +107,25 @@ main()
 	matrix_c = matrix_a + (order == CblasColMajor ? elim_size : elim_size * lda);
 	matrix_d = matrix_a + elim_size * (lda + 1);
 
-	compute_schur(CblasColMajor, matrix_a, matrix_b, matrix_c, matrix_d,
+	ret = compute_schur(CblasColMajor, matrix_a, matrix_b, matrix_c, matrix_d,
 	    elim_size, schur_size, lda, ipiv1);
+
+	assert(ret == 0);
 
 	compute_schur(CblasColMajor, matrix_d,
 	    NULL, NULL, NULL, schur_size, 0, lda, ipiv2);
+	assert(ret == 0);
 	
-	solve(CblasColMajor, matrix_a, matrix_b, matrix_c, matrix_d, rhs, elim_size,
-	    schur_size, nrhs, lda, ipiv1);
+	ret = solve(CblasColMajor, matrix_a, matrix_b, matrix_c, matrix_d, rhs,
+	    elim_size, schur_size, nrhs, lda, ipiv1);
+	assert(ret == 0);
 
-	solve(CblasColMajor, matrix_d, NULL, NULL, NULL, rhs + nrhs * elim_size,
+	ret = solve(CblasColMajor, matrix_d, NULL, NULL, NULL, rhs + nrhs * elim_size,
 	    schur_size, 0, nrhs, lda, ipiv2);
+	assert(ret == 0);
+
 	cblas_dgemm(order, CblasNoTrans, CblasNoTrans, elim_size, nrhs, schur_size,
 	    -1.0, matrix_b, lda, rhs + nrhs * elim_size, lda, 1.0, rhs, lda);
-
 
 	for (int ii = 0; ii < lda; ii++)
 		error += fabs(rhs[ii] - result[ii]);
