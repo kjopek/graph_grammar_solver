@@ -128,7 +128,7 @@ void Node::eliminate() const
         merge();
 
     ret = system->eliminate(getDofsToElim());
-    LOG_ASSERT(ret == 0, "Elimination failed at node: %d.", id); 
+    LOG_ASSERT(ret == 0, "Elimination failed at node: %d.", id);
 }
 
 void Node::bs() const
