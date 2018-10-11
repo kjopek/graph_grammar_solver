@@ -13,7 +13,7 @@ namespace solver {
 Solver::Solver(std::string treePath, enum TreeFileType treeType,
     enum CBLAS_ORDER dataOrder)
 {
-	
+
 	treeType = treeType;
 	dataOrder = dataOrder;
 	if (treeType == kTreePlain) {
@@ -94,7 +94,7 @@ void Solver::loadNodes(std::string treePath)
 
 		treeStream >> id;
 		treeStream >> elementsCount;
-		
+
 		LOG_ASSERT(id >= 1,
 		    "Node enumeration isn't 1-based (Fortran style).");
 		LOG_ASSERT(elementsCount >= 1,
