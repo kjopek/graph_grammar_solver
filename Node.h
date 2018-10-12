@@ -24,16 +24,15 @@ class Node {
 
     public:
         EquationSystem *system;
-        
-        
+
         int l = 0;
         int r = 0;
 
         std::vector<int> leftPlaces;;
         std::vector<int> rightPlaces;
-        
+
         Node(): id(-1), system(NULL) {}
-        
+
         Node(int id) : id(id), system(NULL) {}
         ~Node() {
             delete system;
@@ -68,7 +67,7 @@ class Node {
         void merge() const;
         void eliminate() const;
         void bs() const;
-        
+
         unsigned long getSizeInMemory(bool recursive = true);
         unsigned long getFLOPs(bool recursive = true);
         unsigned long getMemoryRearrangements();
