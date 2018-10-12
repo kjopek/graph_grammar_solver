@@ -15,10 +15,10 @@ extern "C" {
 EquationSystem::EquationSystem(unsigned long n, SolverMode mode) {
     this->n    = n;
     this->mode = mode;
-  
+
     allocate();
 }
-  
+
 void EquationSystem::allocate()
 {
     unsigned long i;
