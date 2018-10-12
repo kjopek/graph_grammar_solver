@@ -74,7 +74,6 @@ class Solver {
 
 	enum FactorizationStatus factorize(enum FactorizationMethod method=kLU);
 	enum SolveStatus getSolution(double *solution);
-	
 	enum SaveStatus saveCachedTree(const std::string &target);
 };
 
