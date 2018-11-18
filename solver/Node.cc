@@ -63,7 +63,7 @@ Node::addDof(int dof)
 	dofs.push_back(dof);
 }
 
-std::vector<int
+std::vector<int>
 &Node::getDofs()
 {
 
@@ -84,7 +84,7 @@ Node::setElementDofs(std::vector<int> &dofs)
 	elementDofs = dofs;
 }
 
-std::vector<in>
+std::vector<int>
 &Node::getElementDofs()
 {
 
