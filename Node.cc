@@ -77,58 +77,60 @@ int Node::getElimSize() const
 
 void Node::allocateSystem(SolverMode mode)
 {
-    system = new EquationSystem(getDofs().size(), mode);
+	system = new EquationSystem(getDofs().size(), mode);
 }
 
 void Node::deallocateSystem()
 {
-    if (system)
-        delete system;
+	if (system != NULL)
+		delete system;
 }
 
 void
 Node::merge(Node &left, Node &right) const
 {
-    int i, j;
-    int x, y, idx;
+	int i, j;
+	int x, y, idx;
 
-    int lDofsSize, lDofsToElim;
-    int rDofsSize, rDofsToElim;
+	int lDofsSize, lDofsToElim;
+	int rDofsSize, rDofsToElim;
 
-    lDofsSize = left.getDofs().size();
-    lDofsToElim = left.getElimSize();
+	lDofsSize = left.getDofs().size();
+	lDofsToElim = left.getElimSize();
 
-    rDofsSize = right.getDofs().size();
-    rDofsToElim = right.getElimSize();
+	rDofsSize = right.getDofs().size();
+	rDofsToElim = right.getElimSize();
 
-    for (j = lDofsToElim; j < lDofsSize; ++j) {
-        x = leftPlaces[j - lDofsToElim];
-        for (i = lDofsToElim; i < lDofsSize; ++i) {
-	    y = leftPlaces[i - lDofsToElim];
-	    idx = system->index(x, y);
-            system->matrix[idx] = left.system->matrix[left.system->index(j, i)];
-        }
-        system->rhs[x] = left.system->rhs[j];
-    }
-    for (j = rDofsToElim; j < rDofsSize; ++j) {
-        x = rightPlaces[j - rDofsToElim];
-        for (i = rDofsToElim; i < rDofsSize; ++i) {
-            y = rightPlaces[i - rDofsToElim];
-	    idx = system->index(x, y);
-            system->matrix[idx] += right.system->matrix[right.system->index(j, i)];
-        }
-        system->rhs[x] += right.system->rhs[j];
-    }
+	for (j = lDofsToElim; j < lDofsSize; ++j) {
+		x = leftPlaces[j - lDofsToElim];
+		for (i = lDofsToElim; i < lDofsSize; ++i) {
+			y = leftPlaces[i - lDofsToElim];
+			idx = system->index(x, y);
+			system->matrix[idx] =
+			   left.system->matrix[left.system->index(j, i)];
+		}
+		system->rhs[x] = left.system->rhs[j];
+	}
+	for (j = rDofsToElim; j < rDofsSize; ++j) {
+		x = rightPlaces[j - rDofsToElim];
+		for (i = rDofsToElim; i < rDofsSize; ++i) {
+			y = rightPlaces[i - rDofsToElim];
+			idx = system->index(x, y);
+			system->matrix[idx] +=
+				right.system->matrix[right.system->index(j, i)];
+		}
+		system->rhs[x] += right.system->rhs[j];
+	}
 }
 
 int
 Node::eliminate() const
 {
-    int ret;
+	int ret;
 
-    ret = system->eliminate(getElimSize());
-    LOG_ASSERT(ret == 0, "Elimination failed at node: %d.", id);
-    return (ret);
+	ret = system->eliminate(getElimSize());
+	LOG_ASSERT(ret == 0, "Elimination failed at node: %d.", id);
+	return (ret);
 }
 
 void Node::bs() const
@@ -137,8 +139,8 @@ void Node::bs() const
 
 void Node::loadMatrix(double *data)
 {
-    size_t nbytes;
+	size_t nbytes;
 
-    nbytes = system->n * system->n * sizeof(*system->matrix);
-    memcpy((void *)system->matrix, (void *)data, nbytes);
+	nbytes = system->n * system->n * sizeof(*system->matrix);
+	memcpy((void *)system->matrix, (void *)data, nbytes);
 }
