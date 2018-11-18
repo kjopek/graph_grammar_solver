@@ -56,7 +56,7 @@ solve(enum CBLAS_ORDER order, double *matrix_a, double *matrix_b,
 	if (schur_size > 0) {
 		cblas_dgemm(order, CblasNoTrans, CblasNoTrans, elim_size, nrhs, schur_size,
 		    -1.0, matrix_c, lda, rhs, lda, 1.0, rhs + nrhs * elim_size, lda);
-	}	
+	}
 	return (0);
 }
 
@@ -80,7 +80,7 @@ main()
 	    4.261006568528997e-01,
 	    7.810688841540293e-01
    	};
-   
+
    	double result[] __attribute__((aligned(128))) = {
 	    3.600700244390033e+00,
 	    -1.775366081079317e+00,
@@ -112,7 +112,7 @@ main()
 	compute_schur(CblasColMajor, matrix_d,
 	    NULL, NULL, NULL, schur_size, 0, lda);
 	assert(ret == 0);
-	
+
 	ret = solve(CblasColMajor, matrix_a, matrix_b, matrix_c, matrix_d, rhs,
 	    elim_size, schur_size, nrhs, lda);
 	assert(ret == 0);
