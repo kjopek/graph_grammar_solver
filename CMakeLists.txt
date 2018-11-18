@@ -26,15 +26,5 @@ link_directories(${LLVM_LIBRARY_DIRS})
 
 add_definitions(${LLVM_DEFINITIONS})
 
-add_library(ElementSolverLib STATIC EquationSystem.cc Node.cc Solver.cc log.c)
-add_executable(ElementSolver main.cc)
-
-target_link_libraries(ElementSolverLib -lalapack -lcblas -lf77blas)
-target_link_libraries(ElementSolver -lalapack -lcblas -lf77blas ElementSolverLib LLVMSupport)
-
-# Tests
-add_executable(test_schur_chol tests/test_schur_chol.cpp)
-target_link_libraries(test_schur_chol -lalapack -lcblas -lf77blas)
-
-add_executable(test_schur_lu tests/test_schur_lu.cpp)
-target_link_libraries(test_schur_lu -lalapack -lcblas -lf77blas)
+add_subdirectory(solver)
+add_subdirectory(tests)
