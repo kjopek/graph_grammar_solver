@@ -27,12 +27,12 @@ public:
     // Productions will use them directly
 
     unsigned long n;
+    unsigned long nrhs;
     double *matrix;
     double *rhs;
     int *ipiv = NULL;
 
-    EquationSystem(): rhs(NULL), matrix(NULL) {};
-    EquationSystem(unsigned long n, SolverMode mode=LU);
+    EquationSystem(unsigned long n, unsigned long nrhs, SolverMode mode=LU);
 
     void allocate();
 

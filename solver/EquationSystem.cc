@@ -14,8 +14,10 @@ extern "C" {
 
 namespace solver {
 
-EquationSystem::EquationSystem(unsigned long n, SolverMode mode) {
+EquationSystem::EquationSystem(unsigned long n, unsigned long nrhs,
+    SolverMode mode) {
 	this->n	= n;
+	this->nrhs = nrhs;
 	this->mode = mode;
 
 	allocate();
@@ -37,9 +39,9 @@ EquationSystem::allocate()
 	 * Assuming cache line is 64 bytes we want to separate allocations
 	 * in order to eliminate false sharing.
 	 */
-	posix_memalign((void **)&matrix, 128, n * (n + 1) * sizeof(double));
+	posix_memalign((void **)&matrix, 128, n * (n + nrhs) * sizeof(double));
 	// Perform memset over allocated area to shake page faults.
-	memset((void *)matrix, 0, n * (n + 1) * sizeof(double));
+	memset((void *)matrix, 0, n * (n + nrhs) * sizeof(double));
 
 	if (matrix == NULL)
 		throw std::string("Cannot allocate memory!");
@@ -101,15 +103,15 @@ EquationSystem::solve(const int rows)
 	if (mode == LU) {
 		LOG_ASSERT(ipiv != NULL,
 		    "IPIV is NULL. Factorization was not performed?");
-		error = clapack_dgetrs(CblasColMajor, CblasNoTrans, m, 1, matrix,
-		    n, ipiv, rhs, n);
+		error = clapack_dgetrs(CblasColMajor, CblasNoTrans, m, nrhs,
+		    matrix, n, ipiv, rhs, n);
 		if (error != 0) {
 			fprintf(stderr, "DGETRS error: %d\n", error);
 			return (error);
 		}
 	} else {
-		clapack_dpotrs(CblasColMajor, CblasUpper, m, 1, matrix, n, rhs,
-		    n);
+		clapack_dpotrs(CblasColMajor, CblasUpper, m, nrhs, matrix, n,
+		    rhs, n);
 	}
 }
 
