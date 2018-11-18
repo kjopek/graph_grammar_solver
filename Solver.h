@@ -51,26 +51,31 @@ class Solver {
 	std::vector<int> supernodes;
 
 	int systemSize = -1;	// Global system size.
-	int rhsSize = -1;	// Num of RHS (RHS is matrix systemSize × rhsSize.
+	int rhsSize = -1;	// Num of RHS (RHS is matrix systemSize × rhsSize).
 
 	enum TreeFileType treeType;
 	enum CBLAS_ORDER dataOrder;
 
+	/* Analysis part. */
 	void analyseTree();
         void mergeAnaliser(Node &node);
         void nodeAnaliser(Node &n, std::set<int> &parent);
 
+	/* Elimination / solve part. */
+	enum FactorizationStatus factorizeTree(Node &root);
+	void mergeNode(Node &node);
 	void loadNodes(std::string treePath);
 	void loadCachedNodes(std::string treePath);
 	Node &getNode(int id);
     public:
-        Solver(std::string treePath, enum TreeFileType treeType=kTreePlain, enum CBLAS_ORDER dataOrder=CblasColMajor);
+        Solver(std::string treePath, enum TreeFileType treeType=kTreePlain,
+	    enum CBLAS_ORDER dataOrder=CblasColMajor);
 	~Solver();
 
 	enum LoadStatus loadFrontMatrix(const double *matrix, int rows, int cols,
 	    int lda);
-	enum LoadStatus loadRightHandSide(const double *rhs, int systemSize, int rhsSize);
-
+	enum LoadStatus loadRightHandSide(const double *rhs, int systemSize,
+	    int rhsSize);
 
 	enum FactorizationStatus factorize(enum FactorizationMethod method=kLU);
 	enum SolveStatus getSolution(double *solution);

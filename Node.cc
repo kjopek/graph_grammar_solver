@@ -86,7 +86,8 @@ void Node::deallocateSystem()
         delete system;
 }
 
-void Node::merge() const
+void
+Node::merge(Node &left, Node &right) const
 {
     int i, j;
     int x, y, idx;
@@ -94,41 +95,40 @@ void Node::merge() const
     int lDofsSize, lDofsToElim;
     int rDofsSize, rDofsToElim;
 
-    lDofsSize = getLeft()->getDofs().size();
-    lDofsToElim = getLeft()->getDofsToElim();
+    lDofsSize = left.getDofs().size();
+    lDofsToElim = left.getElimSize();
 
-    rDofsSize = getRight()->getDofs().size();
-    rDofsToElim = getRight()->getDofsToElim();
+    rDofsSize = right.getDofs().size();
+    rDofsToElim = right.getElimSize();
 
     for (j = lDofsToElim; j < lDofsSize; ++j) {
         x = leftPlaces[j - lDofsToElim];
         for (i = lDofsToElim; i < lDofsSize; ++i) {
 	    y = leftPlaces[i - lDofsToElim];
 	    idx = system->index(x, y);
-            system->matrix[idx] = left->system->matrix[left->system->index(j, i)];
+            system->matrix[idx] = left.system->matrix[left.system->index(j, i)];
         }
-        system->rhs[x] = left->system->rhs[j];
+        system->rhs[x] = left.system->rhs[j];
     }
     for (j = rDofsToElim; j < rDofsSize; ++j) {
         x = rightPlaces[j - rDofsToElim];
         for (i = rDofsToElim; i < rDofsSize; ++i) {
             y = rightPlaces[i - rDofsToElim];
 	    idx = system->index(x, y);
-            system->matrix[idx] += right->system->matrix[right->system->index(j, i)];
+            system->matrix[idx] += right.system->matrix[right.system->index(j, i)];
         }
-        system->rhs[x] += right->system->rhs[j];
+        system->rhs[x] += right.system->rhs[j];
     }
 }
 
-void Node::eliminate() const
+int
+Node::eliminate() const
 {
     int ret;
 
-    if (left != NULL && right != NULL)
-        merge();
-
-    ret = system->eliminate(getDofsToElim());
+    ret = system->eliminate(getElimSize());
     LOG_ASSERT(ret == 0, "Elimination failed at node: %d.", id);
+    return (ret);
 }
 
 void Node::bs() const

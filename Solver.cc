@@ -1,6 +1,7 @@
 #include "Solver.h"
 
 #include <algorithm>
+#include <exception>
 #include <fstream>
 #include <iostream>
 #include <map>
@@ -23,11 +24,14 @@ Solver::Solver(std::string treePath, enum TreeFileType treeType,
 	}
 }
 
-void Solver::loadCachedNodes(std::string treePath)
+void
+Solver::loadCachedNodes(std::string treePath)
 {
+	throw new std::exception();
 }
 
-void Solver::loadNodes(std::string treePath)
+void
+Solver::loadNodes(std::string treePath)
 {
 	int supernodesCount;
 	int treeNodesCount;
@@ -50,7 +54,7 @@ void Solver::loadNodes(std::string treePath)
 
 		LOG_ASSERT(id >= 1,
 		    "Dofs enumeration isn't 1-based (Fortran style).");
-	        LOG_ASSERT(id - 1 == ii, "Node list is not ordered.");
+		LOG_ASSERT(id - 1 == ii, "Node list is not ordered.");
 
 		supernode = id - 1;
 		supernodes[supernode] = count;
@@ -67,11 +71,11 @@ void Solver::loadNodes(std::string treePath)
 		treeStream >> seqNo;
 		treeStream >> supernodesPerElement;
 
-	        LOG_ASSERT(level >= 1,
-	            "Level enumeration isn't 1-based (Fortran style).");
-	        LOG_ASSERT(seqNo >= 1,
+		LOG_ASSERT(level >= 1,
+		    "Level enumeration isn't 1-based (Fortran style).");
+		LOG_ASSERT(seqNo >= 1,
 	            "Sequence number isn't 1-based (Fortran style).");
-	        LOG_ASSERT(supernodesPerElement >= 1,
+		LOG_ASSERT(supernodesPerElement >= 1,
 		    "Invalid number of supernodes per element.");
 
 		for (; supernodesPerElement > 0; supernodesPerElement--) {
@@ -124,7 +128,7 @@ void Solver::loadNodes(std::string treePath)
 			node.setRightId(rightSon);
 		} else {
 			node.setElementDofs(elementsMap[
-				std::make_tuple(level, seqNo)
+			    std::make_tuple(level, seqNo)
 			]);
 		}
 		nodes[nodeOffset] = node;
@@ -132,7 +136,8 @@ void Solver::loadNodes(std::string treePath)
 	treeStream.close();
 }
 
-void Solver::analyseTree()
+void
+Solver::analyseTree()
 {
 	Node &root = getNode(0);
 	std::set<int> parent;
@@ -141,7 +146,8 @@ void Solver::analyseTree()
 	mergeAnaliser(root);
 }
 
-void Solver::nodeAnaliser(Node &node, std::set<int> &parent)
+void
+Solver::nodeAnaliser(Node &node, std::set<int> &parent)
 {
 	auto getAllDOFs = [] (Node &node, std::set<int> &dofs) {
 		std::vector<int> &elementDofs = node.getElementDofs();
@@ -165,9 +171,8 @@ void Solver::nodeAnaliser(Node &node, std::set<int> &parent)
 		    std::inserter(common, common.begin()));
 
 		for (auto p = parent.cbegin(); p != parent.cend(); ++p) {
-			if (lDofs.count(*p) || rDofs.count(*p)) {
+			if (lDofs.count(*p) || rDofs.count(*p))
 				common.insert(*p);
-			}
 		}
 
 		lDofs.clear();
@@ -198,7 +203,8 @@ void Solver::nodeAnaliser(Node &node, std::set<int> &parent)
 	}
 }
 
-void Solver::mergeAnaliser(Node &node)
+void
+Solver::mergeAnaliser(Node &node)
 {
 	if (node.getLeftId() != -1 && node.getRightId() != -1) {
 		int leftDofsSize, leftDofsElim;
@@ -233,6 +239,39 @@ void Solver::mergeAnaliser(Node &node)
 		mergeAnaliser(leftNode);
 		mergeAnaliser(rightNode);
 	}
+}
+
+enum FactorizationStatus
+Solver::factorize(enum FactorizationMethod method)
+{
+	/*
+	 * In order to factorize global matrix we need to start from
+	 * leafs in Partition Tree and go upwards doing eliminate and merge
+	 * functions.
+	 */
+	Node &root = getNode(0);
+	return factorizeTree(root);
+}
+
+
+enum FactorizationStatus
+Solver::factorizeTree(Node &root)
+{
+	if (root.getLeftId() != -1 && root.getRightId() != -1) {
+		Node &left = nodes[root.getLeftId()];
+		Node &right = nodes[root.getRightId()];
+
+		factorizeTree(left);
+		factorizeTree(right);
+
+		root.merge(left, right);
+	}
+
+	int ret = root.eliminate();
+	if (ret == 0)
+		return (kOK);
+	else
+		return (kLUError);
 }
 
 }

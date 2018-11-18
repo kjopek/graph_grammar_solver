@@ -1,14 +1,14 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include <vector>
-#include <string>
 #include <cstdio>
 #include <cstdlib>
+#include <set>
+#include <string>
+#include <vector>
 
 #include "EquationSystem.h"
 
-#include <set>
 
 class Node {
     private:
@@ -25,10 +25,7 @@ class Node {
     public:
         EquationSystem *system;
 
-        int l = 0;
-        int r = 0;
-
-        std::vector<int> leftPlaces;;
+	std::vector<int> leftPlaces;;
         std::vector<int> rightPlaces;
 
         Node(): id(-1), system(NULL) {}
@@ -64,8 +61,8 @@ class Node {
         void allocateSystem(SolverMode mode);
         void deallocateSystem();
 
-        void merge() const;
-        void eliminate() const;
+        void merge(Node &left, Node &right) const;
+        int eliminate() const;
         void bs() const;
 
 	void loadMatrix(double *data);
