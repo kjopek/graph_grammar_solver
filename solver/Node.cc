@@ -7,83 +7,114 @@
 
 namespace solver {
 
-int Node::getId() const
+int
+Node::getId() const
 {
+
 	return (id);
 }
 
-int Node::getParentId() const
+int
+Node::getParentId() const
 {
+
 	return (parentId);
 }
 
-int Node::getLeftId() const
+int
+Node::getLeftId() const
 {
+
 	return (leftId);
 }
 
-int Node::getRightId() const
+int
+Node::getRightId() const
 {
+
 	return (rightId);
 }
 
-void Node::setParentId(int parentId)
+void
+Node::setParentId(int parentId)
 {
+
 	parentId = parentId;
 }
 
-void Node::setLeftId(int leftId)
+void
+Node::setLeftId(int leftId)
 {
+
 	leftId = leftId;
 }
 
-void Node::setRightId(int rightId)
+void
+Node::setRightId(int rightId)
 {
+
 	rightId = rightId;
 }
 
-void Node::addDof(int dof)
+void
+Node::addDof(int dof)
 {
+
 	dofs.push_back(dof);
 }
 
-std::vector<int> &Node::getDofs()
+std::vector<int
+&Node::getDofs()
 {
+
 	return (dofs);
 }
 
-void Node::clearDofs()
+void
+Node::clearDofs()
 {
+
 	dofs.clear();
 }
 
-void Node::setElementDofs(std::vector<int> &dofs)
+void
+Node::setElementDofs(std::vector<int> &dofs)
 {
+
 	elementDofs = dofs;
 }
 
-std::vector<int> &Node::getElementDofs()
+std::vector<in>
+&Node::getElementDofs()
 {
+
 	return (elementDofs);
 }
 
-void Node::setElimSize(int size)
+void
+Node::setElimSize(int size)
 {
+
 	elimSize = size;
 }
 
-int Node::getElimSize() const
+int
+Node::getElimSize() const
 {
+
 	return (elimSize);
 }
 
-void Node::allocateSystem(SolverMode mode)
+void
+Node::allocateSystem(SolverMode mode)
 {
+
 	system = new EquationSystem(getDofs().size(), mode);
 }
 
 void Node::deallocateSystem()
 {
+
 	if (system != NULL)
 		delete system;
 }
