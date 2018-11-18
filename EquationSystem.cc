@@ -21,7 +21,14 @@ EquationSystem::EquationSystem(unsigned long n, SolverMode mode) {
 	allocate();
 }
 
-void EquationSystem::allocate()
+EquationSystem::~EquationSystem()
+{
+	free(matrix);
+	free(ipiv);
+}
+
+void
+EquationSystem::allocate()
 {
 	unsigned long i;
 
@@ -40,13 +47,8 @@ void EquationSystem::allocate()
 	rhs = matrix + n * n;
 }
 
-EquationSystem::~EquationSystem()
-{
-	free(matrix);
-	free(ipiv);
-}
-
-int EquationSystem::eliminate(const int rows)
+int
+EquationSystem::eliminate(const int rows)
 {
 
 	int error = 0, ret = 0;
@@ -60,36 +62,37 @@ int EquationSystem::eliminate(const int rows)
 
 		error = clapack_dgetrf(CblasColMajor, m, m, matrix, n, ipiv);
 		if (error != 0) {
-			printf("DGETRF error: %d\n", error);
+			fprintf(stderr, "DGETRF error: %d\n", error);
 			return (error);
 		}
 
 		error = clapack_dgetrs(CblasColMajor, CblasNoTrans, m, k, matrix,
-			n, ipiv, matrix + m * n, n);
+		    n, ipiv, matrix + m * n, n);
 		if (error != 0) {
-			printf("DGETRS error: %d\n", error);
+			fprintf(stderr,"DGETRS error: %d\n", error);
 			return (error);
 		}
 	} else if (mode == CHOLESKY) {
 		error = clapack_dpotrf(CblasColMajor, CblasUpper, m, matrix, n);
 		if (error != 0) {
-			printf("DPOTRF error: %d\n", error);
+			fprintf(stderr, "DPOTRF error: %d\n", error);
 			return (error);
 		}
 
 		clapack_dpotrs(CblasColMajor, CblasUpper, m, k, matrix, n,
-			matrix + m * n, n);
+		    matrix + m * n, n);
 	} else {
-		printf("Unknown factorization method: %d.\n", mode);
+		fprintf(stderr, "Unknown factorization method: %d.\n", mode);
 		return (-1);
 	}
 	cblas_dgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, k, k, m, -1.0,
-		matrix + m, n, matrix + m * n, n, 1.0, matrix + (n + 1) * m, n);
+	    matrix + m, n, matrix + m * n, n, 1.0, matrix + (n + 1) * m, n);
 
 	return (0);
 }
 
-int EquationSystem::solve(const int rows)
+int
+EquationSystem::solve(const int rows)
 {
 	int error;
 
@@ -102,7 +105,7 @@ int EquationSystem::solve(const int rows)
 		error = clapack_dgetrs(CblasColMajor, CblasNoTrans, m, 1, matrix,
 		    n, ipiv, rhs, n);
 		if (error != 0) {
-			printf("DGETRS error: %d\n", error);
+			fprintf(stderr, "DGETRS error: %d\n", error);
 			return (error);
 		}
 	} else {
@@ -111,7 +114,8 @@ int EquationSystem::solve(const int rows)
 	}
 }
 
-void EquationSystem::print() const
+void
+EquationSystem::print() const
 {
 
 	for (int i = 0; i < n; ++i) {
