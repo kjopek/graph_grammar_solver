@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -g -std=c++14")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 set(BLA_VENDOR ATLAS)
 set(USE_GALOIS FALSE CACHE BOOL "Use Galois scheduler.")
