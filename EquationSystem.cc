@@ -50,7 +50,6 @@ EquationSystem::allocate()
 int
 EquationSystem::eliminate(const int rows)
 {
-
 	int error = 0, ret = 0;
 
 	const int m = rows;
@@ -119,9 +118,8 @@ EquationSystem::print() const
 {
 
 	for (int i = 0; i < n; ++i) {
-		for (int j = 0; j < n; ++j) {
+		for (int j = 0; j < n; ++j)
 			std::printf("% .6f ", *(matrix + i * n + j));
-		}
 		std::printf (" | % .6f\n", rhs[i]);
 	}
 }
