@@ -29,13 +29,14 @@ compute_schur(enum CBLAS_ORDER order, double *matrix_a, double *matrix_b,
 		if (matrix_b == NULL || matrix_c == NULL || matrix_d == NULL) {
 			return (-128);
 		}
-		ret = clapack_dpotrs(order, CblasUpper, elim_size, schur_size, matrix_a,
-		    lda, matrix_b, lda);
+		ret = clapack_dpotrs(order, CblasUpper, elim_size, schur_size,
+		    matrix_a, lda, matrix_b, lda);
 		if (ret != 0)
 			return (ret);
 
-		cblas_dgemm(order, CblasNoTrans, CblasNoTrans, schur_size, elim_size,
-		    schur_size, -1.0, matrix_c, lda, matrix_b, lda, 1.0, matrix_d, lda);
+		cblas_dgemm(order, CblasNoTrans, CblasNoTrans, schur_size,
+		    elim_size, schur_size, -1.0, matrix_c, lda, matrix_b, lda,
+		    1.0, matrix_d, lda);
 	}
 
 	return (0);
@@ -54,8 +55,9 @@ solve(enum CBLAS_ORDER order, double *matrix_a, double *matrix_b,
 		return (ret);
 
 	if (schur_size > 0) {
-		cblas_dgemm(order, CblasNoTrans, CblasNoTrans, elim_size, nrhs, schur_size,
-		    -1.0, matrix_c, lda, rhs, lda, 1.0, rhs + nrhs * elim_size, lda);
+		cblas_dgemm(order, CblasNoTrans, CblasNoTrans, elim_size, nrhs,
+		    schur_size, -1.0, matrix_c, lda, rhs, lda, 1.0, rhs + nrhs *
+		    elim_size, lda);
 	}
 	return (0);
 }
@@ -72,15 +74,12 @@ main()
 	    5.010988765493212e-01, 9.292863480674872e-01, 6.442488358788692e-01, 1.333185355271249e+00
 	};
 	enum CBLAS_ORDER order = CblasColMajor;
-
-
 	double rhs[] __attribute__((aligned(128))) = {
 	    6.663244457244024e-01,
 	    2.291638639293834e-01,
 	    4.261006568528997e-01,
 	    7.810688841540293e-01
    	};
-
    	double result[] __attribute__((aligned(128))) = {
 	    3.600700244390033e+00,
 	    -1.775366081079317e+00,
@@ -100,12 +99,14 @@ main()
 	double *matrix_a, *matrix_b, *matrix_c, *matrix_d;
 
 	matrix_a = matrix;
-	matrix_b = matrix_a + (order == CblasColMajor ? elim_size * lda : elim_size);
-	matrix_c = matrix_a + (order == CblasColMajor ? elim_size : elim_size * lda);
+	matrix_b = matrix_a + (order == CblasColMajor ? elim_size * lda :
+	    elim_size);
+	matrix_c = matrix_a + (order == CblasColMajor ? elim_size : elim_size *
+	    lda);
 	matrix_d = matrix_a + elim_size * (lda + 1);
 
-	ret = compute_schur(CblasColMajor, matrix_a, matrix_b, matrix_c, matrix_d,
-	    elim_size, schur_size, lda);
+	ret = compute_schur(CblasColMajor, matrix_a, matrix_b, matrix_c,
+	    matrix_d, elim_size, schur_size, lda);
 
 	assert(ret == 0);
 
@@ -117,12 +118,13 @@ main()
 	    elim_size, schur_size, nrhs, lda);
 	assert(ret == 0);
 
-	ret = solve(CblasColMajor, matrix_d, NULL, NULL, NULL, rhs + nrhs * elim_size,
-	    schur_size, 0, nrhs, lda);
+	ret = solve(CblasColMajor, matrix_d, NULL, NULL, NULL, rhs + nrhs *
+	    elim_size, schur_size, 0, nrhs, lda);
 	assert(ret == 0);
 
-	cblas_dgemm(order, CblasNoTrans, CblasNoTrans, elim_size, nrhs, schur_size,
-	    -1.0, matrix_b, lda, rhs + nrhs * elim_size, lda, 1.0, rhs, lda);
+	cblas_dgemm(order, CblasNoTrans, CblasNoTrans, elim_size, nrhs,
+	    schur_size, -1.0, matrix_b, lda, rhs + nrhs * elim_size, lda, 1.0,
+	    rhs, lda);
 
 	for (int ii = 0; ii < lda; ii++)
 		error += fabs(rhs[ii] - result[ii]);
