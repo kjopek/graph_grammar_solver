@@ -13,6 +13,7 @@
 #include <cstdio>
 #include <cstdlib>
 
+namespace solver {
 enum SolverMode {
     LU,
     CHOLESKY
@@ -46,5 +47,6 @@ public:
     // DEBUG
     void print() const;
 };
+}
 
 #endif // EQUATIONSYSTEM_H
