@@ -9,6 +9,7 @@
 
 #include "EquationSystem.h"
 
+namespace solver {
 
 class Node {
     private:
@@ -67,5 +68,7 @@ class Node {
 
 	void loadMatrix(double *data);
 };
+
+}
 
 #endif // NODE_H

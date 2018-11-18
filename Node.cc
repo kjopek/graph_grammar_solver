@@ -5,6 +5,8 @@
 #include "Node.h"
 #include "log.h"
 
+namespace solver {
+
 int Node::getId() const
 {
 	return (id);
@@ -143,4 +145,6 @@ void Node::loadMatrix(double *data)
 
 	nbytes = system->n * system->n * sizeof(*system->matrix);
 	memcpy((void *)system->matrix, (void *)data, nbytes);
+}
+
 }
